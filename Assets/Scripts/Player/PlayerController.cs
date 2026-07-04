@@ -76,6 +76,7 @@ namespace ClockworkGearslinger.Player
                 else if (Input.GetKeyDown(KeyCode.S)) inputDirection = -transform.forward;
                 else if (Input.GetKeyDown(KeyCode.A)) inputDirection = -transform.right;
                 else if (Input.GetKeyDown(KeyCode.D)) inputDirection = transform.right;
+                else if (Input.GetMouseButtonDown(1)) inputDirection = transform.forward;
 
                 if (inputDirection != Vector3.zero)
                 {
