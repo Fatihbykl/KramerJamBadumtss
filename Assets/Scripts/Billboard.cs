@@ -11,6 +11,9 @@ public class Billboard : MonoBehaviour
 
     private void LateUpdate()
     {
-        transform.LookAt(-cameraTransform.position);
+        Vector3 positionToLook = cameraTransform.position;
+        positionToLook.y = transform.position.y;
+
+        transform.LookAt(positionToLook);
     }
 }
