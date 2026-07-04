@@ -16,6 +16,11 @@ namespace ClockworkGearslinger.Enemies
         private NavMeshAgent navAgent;
         private Transform playerTarget;
         
+        [Header("Stats Settings")]
+        [Tooltip("Maximum health of the enemy. Can be increased for bosses.")]
+        [SerializeField] private int maxHealth = 1;
+        private int currentHealth;
+
         [Header("Movement Settings")]
         [Tooltip("How far the enemy moves per beat.")]
         [SerializeField] private float moveDistance = 2f;
@@ -26,6 +31,7 @@ namespace ClockworkGearslinger.Enemies
 
         private void Start()
         {
+            currentHealth = maxHealth;
             navAgent = GetComponent<NavMeshAgent>();
             
             // Disable agent's automatic movement update to move step by step manually
@@ -131,6 +137,22 @@ namespace ClockworkGearslinger.Enemies
 
         /// <summary>
         /// Called by the PlayerController's raycast when perfectly shot on the beat.
+        /// </summary>
+        public void TakeDamage(int damage)
+        {
+            currentHealth -= damage;
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
+            else
+            {
+                Debug.Log($"[EnemyController] Enemy hit! Health remaining: {currentHealth}");
+            }
+        }
+
+        /// <summary>
+        /// Kills the enemy and plays the death effect.
         /// </summary>
         public void Die()
         {

@@ -153,7 +153,7 @@ namespace ClockworkGearslinger.Player
                     var enemy = hit.collider.GetComponentInParent<ClockworkGearslinger.Enemies.EnemyController>();
                     if (enemy != null)
                     {
-                        enemy.Die();
+                        enemy.TakeDamage(1);
                     }
                 }
             }
