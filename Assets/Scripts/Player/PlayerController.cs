@@ -98,6 +98,7 @@ namespace ClockworkGearslinger.Player
                             {
                                 lastMoveBeat = currentClosestBeat;
                                 StartCoroutine(MoveGrid(inputDirection));
+                                AudioManager.Instance.PlayMovementSound();
                                 OnMovementSuccess?.Invoke();
                             }
                         }

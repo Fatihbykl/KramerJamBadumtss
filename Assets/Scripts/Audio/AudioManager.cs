@@ -25,6 +25,7 @@ namespace ClockworkGearslinger.Audio
         [SerializeField] private AudioSource sfxSource;
         [Tooltip("Assign your shoot sounds here to play them randomly.")]
         [SerializeField] private AudioClip[] shootSounds;
+        [SerializeField] private AudioClip movementSound;
 
         [Header("Settings")]
         [Tooltip("Delay in seconds before the audio starts playing. Gives time for loading.")]
@@ -149,6 +150,11 @@ namespace ClockworkGearslinger.Audio
             {
                 Debug.LogWarning("[AudioManager] Attempted to play shoot sound, but sfxSource or shootSounds array is missing/empty!");
             }
+        }
+        
+        public void PlayMovementSound()
+        {
+            sfxSource.PlayOneShot(movementSound);
         }
     }
 }
