@@ -62,6 +62,19 @@ namespace ClockworkGearslinger.Audio
                 return;
             }
 
+            // Force stop and reset all sources to prevent 'Play On Awake' desyncs
+            drumsAndBassSource.Stop();
+            rhythmGuitarSource.Stop();
+            leadGuitarSource.Stop();
+
+            drumsAndBassSource.playOnAwake = false;
+            rhythmGuitarSource.playOnAwake = false;
+            leadGuitarSource.playOnAwake = false;
+
+            drumsAndBassSource.time = 0f;
+            rhythmGuitarSource.time = 0f;
+            leadGuitarSource.time = 0f;
+
             // Calculate precise start time in the future using the highly accurate dspTime
             SongStartTime = AudioSettings.dspTime + startDelay;
 

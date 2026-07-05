@@ -2573,8 +2573,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ClockworkGearslinger.Audio.AudioManager
   drumsAndBassSource: {fileID: 685470084}
-  rhythmGuitarSource: {fileID: 327825937}
-  leadGuitarSource: {fileID: 604264002}
+  rhythmGuitarSource: {fileID: 604264002}
+  leadGuitarSource: {fileID: 327825937}
   startDelay: 1
 --- !u!4 &1701580987
 Transform:
