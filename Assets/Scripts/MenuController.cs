@@ -21,6 +21,6 @@ public class MenuController : MonoBehaviour
     private void Update()
     {
         timer += Time.deltaTime;
-        title.color = new Color(Mathf.Lerp(100f, 255f, Mathf.Sin(timer)) / 255f, 0f, 0f);
+        title.color = new Color(Mathf.Lerp(180f, 255f, Mathf.Sin(timer)) / 255f, Mathf.Lerp(0f, 255f, Mathf.Sin(timer)), 0f);
     }
 }
