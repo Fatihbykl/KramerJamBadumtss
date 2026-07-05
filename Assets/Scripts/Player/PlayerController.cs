@@ -53,6 +53,8 @@ namespace ClockworkGearslinger.Player
 
         private void Update()
         {
+            HandleMovement();
+
             // Simple State Machine logic
             if (CurrentState == PlayerState.Normal)
             {
@@ -64,10 +66,7 @@ namespace ClockworkGearslinger.Player
             }
         }
 
-        /// <summary>
-        /// Phase 3: Handles standard gameplay. Move and shoot on the beat.
-        /// </summary>
-        private void HandleNormalState()
+        private void HandleMovement()
         {
             // 1. Grid Movement
             if (!isMoving)
@@ -110,7 +109,13 @@ namespace ClockworkGearslinger.Player
                     }
                 }
             }
+        }
 
+        /// <summary>
+        /// Phase 3: Handles standard gameplay. Shoot on the beat.
+        /// </summary>
+        private void HandleNormalState()
+        {
             // 2. Firing
             if (Input.GetMouseButtonDown(0)) // Left Mouse Button
             {
