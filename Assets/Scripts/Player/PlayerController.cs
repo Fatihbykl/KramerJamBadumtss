@@ -19,6 +19,7 @@ namespace ClockworkGearslinger.Player
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private Animator revolverAnimator;
+        [SerializeField] private ParticleSystem shootParticle;
         
         [Header("Grid Movement Settings")]
         [Tooltip("How far the player moves per grid step.")]
@@ -144,9 +145,16 @@ namespace ClockworkGearslinger.Player
             BulletCount--;
             Debug.Log("[PlayerController] BANG! Perfect beat hit.");
             
+            // Play random shoot sound
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayRandomShootSound();
+            }
+
             // Fire event for UI crosshair flash, screen shake
             OnGunFired?.Invoke(); 
-            revolverAnimator.SetTrigger("Shoot");
+            shootParticle.Play();
+            if (revolverAnimator != null) revolverAnimator.SetTrigger("Shoot");
 
             // Perform Hitscan (Raycast) from the main camera's center
             if (Camera.main != null)

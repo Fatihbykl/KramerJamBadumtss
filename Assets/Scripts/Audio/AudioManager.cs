@@ -20,6 +20,12 @@ namespace ClockworkGearslinger.Audio
         [Tooltip("The lead guitar track that mutes on jams.")]
         [SerializeField] private AudioSource leadGuitarSource;
 
+        [Header("SFX")]
+        [Tooltip("Audio source for playing one-shot sound effects (like shooting).")]
+        [SerializeField] private AudioSource sfxSource;
+        [Tooltip("Assign your shoot sounds here to play them randomly.")]
+        [SerializeField] private AudioClip[] shootSounds;
+
         [Header("Settings")]
         [Tooltip("Delay in seconds before the audio starts playing. Gives time for loading.")]
         [SerializeField] private double startDelay = 1.0d;
@@ -127,6 +133,22 @@ namespace ClockworkGearslinger.Audio
             if (rhythmGuitarSource != null) rhythmGuitarSource.Stop();
             if (leadGuitarSource != null) leadGuitarSource.Stop();
             IsPlaying = false;
+        }
+
+        /// <summary>
+        /// Plays a randomly selected shooting sound effect.
+        /// </summary>
+        public void PlayRandomShootSound()
+        {
+            if (sfxSource != null && shootSounds != null && shootSounds.Length > 0)
+            {
+                int randomIndex = Random.Range(0, shootSounds.Length);
+                sfxSource.PlayOneShot(shootSounds[randomIndex]);
+            }
+            else
+            {
+                Debug.LogWarning("[AudioManager] Attempted to play shoot sound, but sfxSource or shootSounds array is missing/empty!");
+            }
         }
     }
 }
