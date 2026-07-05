@@ -31,11 +31,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Revolver|Reload
-      takeName: Revolver|Reload
-      internalID: -5294957802181371201
+      name: Idle
+      takeName: Idle
+      internalID: -3100369314251171874
       firstFrame: 0
-      lastFrame: 14
+      lastFrame: 1
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -60,11 +60,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Revolver|Revolver Idle
-      takeName: Revolver|Revolver Idle
-      internalID: -5201400782100711515
+      name: Revolver|Reload
+      takeName: Revolver|Reload
+      internalID: -5294957802181371201
       firstFrame: 0
-      lastFrame: 1
+      lastFrame: 14
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
