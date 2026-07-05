@@ -24,6 +24,9 @@ namespace ClockworkGearslinger.UI
         [Tooltip("The massive text that flashes when jammed.")]
         [SerializeField] private TextMeshProUGUI jamText; 
         
+        [Tooltip("The text that displays the current combo counter.")]
+        [SerializeField] private TextMeshProUGUI comboText; 
+        
         [Tooltip("Array of 3 UI Images (pips/dots) to track recovery progress.")]
         [SerializeField] private SkinnedMeshRenderer[] recoveryPips;
 
@@ -40,6 +43,7 @@ namespace ClockworkGearslinger.UI
             // Initialize UI state
             if (crosshair != null) originalCrosshairPos = crosshair.anchoredPosition;
             if (jamText != null) jamText.gameObject.SetActive(false);
+            if (comboText != null) comboText.gameObject.SetActive(false);
             ResetPips(pipFilledMaterial);
 
             // 1. Subscribe to the Metronome
@@ -55,6 +59,8 @@ namespace ClockworkGearslinger.UI
                 playerController.OnRecoveryHit += UpdateRecoveryPips;
                 playerController.OnRecoveryFailed += ShowRecoveryError;
                 playerController.OnGunFired += HandleGunFired;
+                playerController.OnComboChanged += UpdateComboUI;
+                playerController.OnComboLost += ResetComboUI;
             }
             else
             {
@@ -76,6 +82,8 @@ namespace ClockworkGearslinger.UI
                 playerController.OnRecoveryHit -= UpdateRecoveryPips;
                 playerController.OnRecoveryFailed -= ShowRecoveryError;
                 playerController.OnGunFired -= HandleGunFired;
+                playerController.OnComboChanged -= UpdateComboUI;
+                playerController.OnComboLost -= ResetComboUI;
             }
         }
 
@@ -265,6 +273,58 @@ namespace ClockworkGearslinger.UI
                 yield return null;
             }
             crosshair.anchoredPosition = originalCrosshairPos;
+        }
+
+        private Coroutine comboPopCoroutine;
+
+        private void UpdateComboUI(int newCombo)
+        {
+            if (comboText != null)
+            {
+                comboText.gameObject.SetActive(true);
+                comboText.text = newCombo + "x COMBO!";
+                
+                // Add color changing effects based on combo level
+                if (newCombo >= 20) comboText.color = new Color(1f, 0.5f, 0f); // Orange
+                else if (newCombo >= 10) comboText.color = Color.yellow;
+                else comboText.color = Color.white;
+
+                if (comboPopCoroutine != null)
+                {
+                    StopCoroutine(comboPopCoroutine);
+                }
+                comboPopCoroutine = StartCoroutine(PopTextEffect(comboText, 1.5f));
+            }
+        }
+
+        private void ResetComboUI()
+        {
+            if (comboText != null)
+            {
+                comboText.gameObject.SetActive(false);
+            }
+        }
+
+        // A reusable pop effect for texts
+        private IEnumerator PopTextEffect(TextMeshProUGUI textElement, float popScale)
+        {
+            if (textElement == null) yield break;
+            
+            float duration = 0.2f;
+            float elapsed = 0f;
+            Vector3 startScale = Vector3.one * popScale;
+            Vector3 finalScale = Vector3.one;
+
+            while (elapsed < duration)
+            {
+                float t = elapsed / duration;
+                float easeT = 1f - Mathf.Pow(1f - t, 3f); // Cubic ease out
+                
+                textElement.transform.localScale = Vector3.LerpUnclamped(startScale, finalScale, easeT);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+            textElement.transform.localScale = finalScale;
         }
     }
 }

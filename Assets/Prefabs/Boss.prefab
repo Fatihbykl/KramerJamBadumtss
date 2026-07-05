@@ -817,7 +817,8 @@ MonoBehaviour:
   maxHealth: 8
   moveDistance: 2
   moveDuration: 0.1
-  beatsPerMove: 4
+  beatsPerMove: 2
+  killDistance: 1.5
 --- !u!1 &7798415360654620218
 GameObject:
   m_ObjectHideFlags: 0

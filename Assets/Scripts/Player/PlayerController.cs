@@ -34,6 +34,7 @@ namespace ClockworkGearslinger.Player
         public PlayerState CurrentState { get; private set; } = PlayerState.Normal;
         public int BulletCount { get; private set; } = 1;
         public int ConsecutiveRecoveryHits { get; private set; } = 0;
+        public int ComboCount { get; private set; } = 0;
 
         // Track actions separately so players can move AND shoot on the same beat
         private int lastMoveBeat = -1;
@@ -49,6 +50,8 @@ namespace ClockworkGearslinger.Player
         public event Action OnRecoveryFailed;
         public event Action OnGunFired;
         public event Action OnMovementSuccess;
+        public event Action<int> OnComboChanged;
+        public event Action OnComboLost;
 
         private bool isMoving = false;
 
@@ -97,6 +100,8 @@ namespace ClockworkGearslinger.Player
                             if (currentClosestBeat != lastMoveBeat)
                             {
                                 lastMoveBeat = currentClosestBeat;
+                                ComboCount++;
+                                OnComboChanged?.Invoke(ComboCount);
                                 StartCoroutine(MoveGrid(inputDirection));
                                 AudioManager.Instance.PlayMovementSound();
                                 OnMovementSuccess?.Invoke();
@@ -106,6 +111,11 @@ namespace ClockworkGearslinger.Player
                         {
                             // MISSED A MOVE BEAT! Apply penalty
                             lockedUntilBeat = currentClosestBeat + movePenaltyBeats;
+                            if (ComboCount > 0)
+                            {
+                                ComboCount = 0;
+                                OnComboLost?.Invoke();
+                            }
                             Debug.Log($"[PlayerController] MOVE FAILED! Movement locked until beat {lockedUntilBeat}.");
                         }
                     }
@@ -129,6 +139,8 @@ namespace ClockworkGearslinger.Player
                         lastShootBeat = currentBeat;
                         //if (BulletCount > 0)
                         //{
+                            ComboCount++;
+                            OnComboChanged?.Invoke(ComboCount);
                             FireWeapon();
                         //}
                     }
@@ -179,6 +191,11 @@ namespace ClockworkGearslinger.Player
         {
             CurrentState = PlayerState.Jammed;
             ConsecutiveRecoveryHits = 0; // Reset counter
+            if (ComboCount > 0)
+            {
+                ComboCount = 0;
+                OnComboLost?.Invoke();
+            }
             
             Debug.Log("[PlayerController] GUN JAMMED! PUNISHED STATE ENTERED.");
             
