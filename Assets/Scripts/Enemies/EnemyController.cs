@@ -134,15 +134,40 @@ namespace ClockworkGearslinger.Enemies
             isMoving = false;
         }
 
-        // Triggered when the enemy touches something
+        [Header("Combat Settings")]
+        [Tooltip("If the enemy gets within this distance of the player, the player dies.")]
+        [SerializeField] private float killDistance = 1.5f;
+        private bool hasKilledPlayer = false;
+
+        private void Update()
+        {
+            // Reliable distance-based kill check to bypass Unity Physics trigger quirks
+            if (playerTarget != null && !hasKilledPlayer)
+            {
+                if (Vector3.Distance(transform.position, playerTarget.position) <= killDistance)
+                {
+                    PlayerHealth pHealth = playerTarget.GetComponentInParent<PlayerHealth>();
+                    if (pHealth != null)
+                    {
+                        hasKilledPlayer = true;
+                        pHealth.Die();
+                    }
+                }
+            }
+        }
+
+        // Triggered when the enemy touches something (Fallback for physics-based collisions)
         private void OnTriggerEnter(Collider other)
         {
+            if (hasKilledPlayer) return;
+            
             // If the enemy touches the player, the player dies instantly.
             if (other.CompareTag("Player"))
             {
                 PlayerHealth pHealth = other.GetComponentInParent<PlayerHealth>();
                 if (pHealth != null)
                 {
+                    hasKilledPlayer = true;
                     pHealth.Die();
                 }
             }

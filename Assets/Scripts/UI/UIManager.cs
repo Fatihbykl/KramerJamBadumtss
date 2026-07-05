@@ -132,6 +132,17 @@ namespace ClockworkGearslinger.UI
             }
         }
 
+        public void ShowGameOver()
+        {
+            if (jamText != null)
+            {
+                jamText.text = "GAME OVER!";
+                jamText.color = Color.red;
+                StopCoroutine(nameof(BounceText));
+                StartCoroutine(nameof(BounceText));
+            }
+        }
+
         private IEnumerator BounceText()
         {
             if (jamText == null) yield break;

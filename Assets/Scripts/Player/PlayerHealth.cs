@@ -8,15 +8,35 @@ namespace ClockworkGearslinger.Player
     /// </summary>
     public class PlayerHealth : MonoBehaviour
     {
+        private bool isDead = false;
+
         /// <summary>
-        /// Instantly kills the player.
+        /// Kills the player, shows game over state, and restarts the level.
         /// </summary>
         public void Die()
         {
+            if (isDead) return;
+            isDead = true;
+
             Debug.Log("[PlayerHealth] Player touched by Enemy! GAME OVER.");
             
-            // For a Game Jam, instantly restarting the active scene is the most robust and quick way to handle game over.
-            // You can replace this with a Game Over UI screen if you have time.
+            // Show Game Over UI
+            var uiManager = FindObjectOfType<ClockworkGearslinger.UI.UIManager>();
+            if (uiManager != null)
+            {
+                uiManager.ShowGameOver();
+            }
+
+            // Disable player input
+            var pc = GetComponent<PlayerController>();
+            if (pc != null) pc.enabled = false;
+
+            // Restart the level after 3 seconds so the player can see what killed them
+            Invoke(nameof(RestartScene), 3f);
+        }
+
+        private void RestartScene()
+        {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
