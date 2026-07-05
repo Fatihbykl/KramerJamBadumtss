@@ -29,6 +29,16 @@ namespace ClockworkGearslinger.Audio
         
         public bool IsPlaying { get; private set; }
 
+        public float CurrentPlaybackTime
+        {
+            get { return drumsAndBassSource != null ? drumsAndBassSource.time : 0f; }
+        }
+
+        public float TrackDuration
+        {
+            get { return (drumsAndBassSource != null && drumsAndBassSource.clip != null) ? drumsAndBassSource.clip.length : 0f; }
+        }
+
         private void Awake()
         {
             // Standard Singleton pattern setup

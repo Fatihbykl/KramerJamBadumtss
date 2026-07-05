@@ -2876,7 +2876,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClockworkGearslinger.Core.RhythmManager
   bpm: 100
   defaultInputTolerance: 0.15
-  audioOffset: -0.05
+  audioOffset: 0
+  useMidiFile: 1
+  midiFile: {fileID: 4900000, guid: 6dc05470d95fc2145a198b021f2db128, type: 3}
+  targetMidiNote: 38
+  overrideMidiTempo: 1
 --- !u!4 &2013217881
 Transform:
   m_ObjectHideFlags: 0
