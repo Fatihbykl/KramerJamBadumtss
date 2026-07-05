@@ -20,7 +20,11 @@ namespace ClockworkGearslinger.UI
         [Header("UI Elements")]
         [Tooltip("The central crosshair that pulses to the beat.")]
         [SerializeField] private RectTransform crosshair;
-        
+
+        private string[] JAM_TEXTS = new string[] {
+            "KEEP TRYING", "ONE MORE TIME", "NEVER GIVE UP", "DESTROY THEM", "KILL KILL KILL", "SAVE YOUR KIND"
+        };
+
         [Tooltip("The massive text that flashes when jammed.")]
         [SerializeField] private TextMeshProUGUI jamText; 
         
@@ -147,7 +151,8 @@ namespace ClockworkGearslinger.UI
         {
             if (jamText != null)
             {
-                jamText.text = "ONE MORE TIME!";
+                string randomJamText = JAM_TEXTS[Random.Range(0, JAM_TEXTS.Length)];
+                jamText.text = randomJamText;
                 StopCoroutine(nameof(BounceText));
                 StartCoroutine(nameof(BounceText));
             }
@@ -334,7 +339,7 @@ namespace ClockworkGearslinger.UI
         {
             if (remainingEnemiesText != null)
             {
-                remainingEnemiesText.text = $"ENEMIES LEFT: {remaining}";
+                remainingEnemiesText.text = $"Enemies Left: {remaining}";
                 
                 // Add a small pop effect when an enemy is defeated
                 StopCoroutine(nameof(PopTextEffectWrapperForEnemies));
