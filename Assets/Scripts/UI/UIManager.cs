@@ -121,6 +121,17 @@ namespace ClockworkGearslinger.UI
             ResetPips(pipErrorMaterial);
         }
 
+        public void ShowGameFinished()
+        {
+            if (jamText != null)
+            {
+                jamText.text = "STAGE CLEARED!";
+                jamText.color = Color.yellow;
+                StopCoroutine(nameof(BounceText));
+                StartCoroutine(nameof(BounceText));
+            }
+        }
+
         private IEnumerator BounceText()
         {
             if (jamText == null) yield break;

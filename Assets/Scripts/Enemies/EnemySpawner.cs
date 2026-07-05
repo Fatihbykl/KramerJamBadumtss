@@ -1,36 +1,47 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using ClockworkGearslinger.Core;
 
 namespace ClockworkGearslinger.Enemies
 {
+    [System.Serializable]
+    public class Wave
+    {
+        public string waveName = "Wave 1";
+        [Tooltip("At which beat this wave should begin spawning.")]
+        public int startBeat;
+        [Tooltip("How many enemies to spawn in this wave.")]
+        public int enemyCount = 5;
+        [Tooltip("How many beats to wait between each spawn in this wave.")]
+        public int spawnIntervalBeats = 4;
+        [Tooltip("The specific prefab to spawn for this wave (e.g. regular enemy or boss).")]
+        public GameObject enemyPrefab;
+    }
+
     /// <summary>
-    /// Spawns enemies rhythmically and a boss at a specific beat.
+    /// Spawns enemies rhythmically using an editable Wave System.
     /// </summary>
     public class EnemySpawner : MonoBehaviour
     {
-        [Header("Prefabs")]
-        [SerializeField] private GameObject enemyPrefab;
-        [SerializeField] private GameObject bossPrefab;
-
-        [Header("Spawn Settings")]
-        [Tooltip("Spawn an enemy every X beats.")]
-        [SerializeField] private int enemySpawnIntervalBeats = 4;
-        
-        [Tooltip("Spawn the boss exactly at this beat of the song.")]
-        [SerializeField] private int bossSpawnBeat = 64;
-
-        [Tooltip("Radius around this spawner object to randomly spawn enemies.")]
-        [SerializeField] private float spawnRadius = 20f;
+        [Header("Wave Configuration")]
+        [Tooltip("Define your waves here. The game finishes when the last wave is defeated.")]
+        [SerializeField] private List<Wave> waves = new List<Wave>();
 
         [Header("Spawn Restrictions")]
+        [Tooltip("Radius around this spawner object to randomly spawn enemies.")]
+        [SerializeField] private float spawnRadius = 20f;
         [Tooltip("Minimum distance from the player to spawn.")]
         [SerializeField] private float minimumPlayerDistance = 10f;
         [Tooltip("Ensure enemies spawn off-screen.")]
         [SerializeField] private bool requireOffScreenSpawn = true;
 
-        private bool bossSpawned = false;
+        private int currentWaveIndex = 0;
+        private int spawnedEnemiesInCurrentWave = 0;
         private int lastSpawnedEnemyBeat = -1;
+        private bool isGameFinished = false;
+
+        private System.Collections.Generic.List<GameObject> activeEnemies = new System.Collections.Generic.List<GameObject>();
 
         private Transform playerTransform;
         private Camera mainCamera;
@@ -60,30 +71,70 @@ namespace ClockworkGearslinger.Enemies
 
         private void HandleBeat()
         {
-            int currentBeat = Mathf.FloorToInt(RhythmManager.Instance.SongPositionInBeats);
+            if (isGameFinished) return;
 
-            // Check if it's time to spawn the boss
-            if (!bossSpawned && currentBeat >= bossSpawnBeat)
+            int currentBeat = Mathf.FloorToInt(RhythmManager.Instance.SongPositionInBeats);
+            
+            // Clean up destroyed enemies from the list
+            activeEnemies.RemoveAll(e => e == null);
+
+            // Check win condition
+            if (currentWaveIndex >= waves.Count)
             {
-                SpawnEntity(bossPrefab);
-                bossSpawned = true;
-                Debug.Log($"[EnemySpawner] Boss spawned at beat {currentBeat}!");
+                if (activeEnemies.Count == 0)
+                {
+                    FinishGame();
+                }
+                return;
             }
 
-            // Check if it's time to spawn a regular enemy
-            if (currentBeat > lastSpawnedEnemyBeat && currentBeat % enemySpawnIntervalBeats == 0)
+            Wave currentWave = waves[currentWaveIndex];
+
+            // Wait until the beat reaches the start of the current wave
+            if (currentBeat >= currentWave.startBeat)
             {
-                SpawnEntity(enemyPrefab);
-                lastSpawnedEnemyBeat = currentBeat;
+                // Only spawn if enough beats have passed since the last spawn
+                if (currentBeat > lastSpawnedEnemyBeat && (currentBeat - currentWave.startBeat) % currentWave.spawnIntervalBeats == 0)
+                {
+                    SpawnEntity(currentWave.enemyPrefab);
+                    lastSpawnedEnemyBeat = currentBeat;
+                    spawnedEnemiesInCurrentWave++;
+
+                    // If we've spawned all enemies for this wave, progress to the next wave
+                    if (spawnedEnemiesInCurrentWave >= currentWave.enemyCount)
+                    {
+                        currentWaveIndex++;
+                        spawnedEnemiesInCurrentWave = 0;
+                        Debug.Log($"[EnemySpawner] Finished spawning wave {currentWaveIndex}.");
+                    }
+                }
             }
         }
 
         private void SpawnEntity(GameObject prefab)
         {
-            if (prefab == null) return;
+            if (prefab == null) 
+            {
+                Debug.LogWarning("[EnemySpawner] Attempted to spawn a null prefab. Please assign a prefab to the wave in the inspector.");
+                return;
+            }
 
             Vector3 randomPoint = GetRandomPointOnNavMesh();
-            Instantiate(prefab, randomPoint, Quaternion.identity);
+            GameObject newEnemy = Instantiate(prefab, randomPoint, Quaternion.identity);
+            activeEnemies.Add(newEnemy);
+        }
+
+        private void FinishGame()
+        {
+            isGameFinished = true;
+            Debug.Log("[EnemySpawner] ALL WAVES DEFEATED! GAME FINISHED!");
+            
+            // Find the UIManager and trigger the finish text
+            var uiManager = FindObjectOfType<ClockworkGearslinger.UI.UIManager>();
+            if (uiManager != null)
+            {
+                uiManager.ShowGameFinished();
+            }
         }
 
         private Vector3 GetRandomPointOnNavMesh()
@@ -104,7 +155,6 @@ namespace ClockworkGearslinger.Enemies
                 if (requireOffScreenSpawn && mainCamera != null)
                 {
                     Vector3 viewportPoint = mainCamera.WorldToViewportPoint(randomPos);
-                    // Check if the point is strictly inside the screen bounds (with a small margin)
                     bool isOnScreen = viewportPoint.z > 0 && viewportPoint.x > -0.1f && viewportPoint.x < 1.1f && viewportPoint.y > -0.1f && viewportPoint.y < 1.1f;
                     if (isOnScreen)
                     {
@@ -119,7 +169,6 @@ namespace ClockworkGearslinger.Enemies
                 }
             }
 
-            // Fallback to spawner's exact position if we couldn't find a spot
             return transform.position;
         }
 

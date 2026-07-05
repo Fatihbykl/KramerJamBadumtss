@@ -24,7 +24,7 @@ RenderSettings:
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 1
+  m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.33735314, g: 0.39406517, b: 0.5377358, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 752c09423f8872a4089d8ce9c0e88e0b, type: 2}
   m_HaloStrength: 0.5
@@ -482,7 +482,7 @@ Light:
   serializedVersion: 13
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1540,6 +1540,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7511558181221131132, guid: ba5fe9bd5f860be40b94f3ffdf6cad10, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: fb3c064dd2797a247bd3a699dde0ceb7, type: 2}
     - target: {fileID: -8679921383154817045, guid: 83443e7c0d07db240a1bf41ceac5eb3f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1596,10 +1600,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Map
       objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: ba5fe9bd5f860be40b94f3ffdf6cad10, type: 3}
-      propertyPath: 'm_Materials.Array.data[1]'
-      value: 
-      objectReference: {fileID: 2100000, guid: fb3c064dd2797a247bd3a699dde0ceb7, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6969,7 +6969,7 @@ Light:
   serializedVersion: 13
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.5
+  m_Intensity: 0.3
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -7304,7 +7304,6 @@ MonoBehaviour:
   - {fileID: 4322645930171968951}
   crosshairPulseScale: 1.3
   pulseDuration: 0.15
-  pipEmptyMaterial: {fileID: 2100000, guid: e857306598785904a92326ad29b26210, type: 2}
   pipFilledMaterial: {fileID: 2100000, guid: b144c50deee1e17419dc5b812e85a6cc, type: 2}
   pipErrorMaterial: {fileID: 2100000, guid: a4f34f835e88feb4a8129667c8589815, type: 2}
 --- !u!114 &1491116885
@@ -7352,10 +7351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9730369e60d8ff649a5a81d5709edd68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ClockworkGearslinger.Enemies.EnemySpawner
-  enemyPrefab: {fileID: 7985083080254608684, guid: 5dd037e24177bbd4dbf1c8e4b443c816, type: 3}
-  bossPrefab: {fileID: 7666524986421170041, guid: b635cde5b58218d4bbde6eaea10fcbf0, type: 3}
-  enemySpawnIntervalBeats: 10
-  bossSpawnBeat: 20
+  waves: []
   spawnRadius: 20
   minimumPlayerDistance: 10
   requireOffScreenSpawn: 1
