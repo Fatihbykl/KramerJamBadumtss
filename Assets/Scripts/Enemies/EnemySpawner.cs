@@ -24,6 +24,9 @@ namespace ClockworkGearslinger.Enemies
     /// </summary>
     public class EnemySpawner : MonoBehaviour
     {
+        public static EnemySpawner Instance { get; private set; }
+        public event System.Action<int> OnRemainingEnemiesChanged;
+
         [Header("Wave Configuration")]
         [Tooltip("Define your waves here. The game finishes when the last wave is defeated.")]
         [SerializeField] private List<Wave> waves = new List<Wave>();
@@ -46,8 +49,27 @@ namespace ClockworkGearslinger.Enemies
         private Transform playerTransform;
         private Camera mainCamera;
 
+        private int totalEnemiesToSpawn = 0;
+        private int enemiesKilled = 0;
+        public int RemainingEnemies => Mathf.Max(0, totalEnemiesToSpawn - enemiesKilled);
+
+        private void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+        }
+
         private void Start()
         {
+            foreach (var wave in waves)
+            {
+                totalEnemiesToSpawn += wave.enemyCount;
+            }
+
             mainCamera = Camera.main;
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null)
@@ -59,6 +81,7 @@ namespace ClockworkGearslinger.Enemies
             {
                 RhythmManager.Instance.OnBeat += HandleBeat;
             }
+            EnemyController.OnEnemyDied += HandleEnemyDied;
         }
 
         private void OnDestroy()
@@ -67,6 +90,15 @@ namespace ClockworkGearslinger.Enemies
             {
                 RhythmManager.Instance.OnBeat -= HandleBeat;
             }
+            EnemyController.OnEnemyDied -= HandleEnemyDied;
+        }
+
+        private void HandleEnemyDied()
+        {
+            enemiesKilled++;
+            int remaining = totalEnemiesToSpawn - enemiesKilled;
+            if (remaining < 0) remaining = 0;
+            OnRemainingEnemiesChanged?.Invoke(remaining);
         }
 
         private void HandleBeat()

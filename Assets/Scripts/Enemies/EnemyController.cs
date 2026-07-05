@@ -18,6 +18,8 @@ namespace ClockworkGearslinger.Enemies
 
         private Animator animator;
         
+        public static event System.Action OnEnemyDied;
+        
         [Header("Stats Settings")]
         [Tooltip("Maximum health of the enemy. Can be increased for bosses.")]
         [SerializeField] private int maxHealth = 1;
@@ -203,6 +205,7 @@ namespace ClockworkGearslinger.Enemies
             }
             
             // Destroy the enemy GameObject (1 hit kill)
+            OnEnemyDied?.Invoke();
             Destroy(gameObject);
         }
     }

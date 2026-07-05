@@ -27,6 +27,9 @@ namespace ClockworkGearslinger.UI
         [Tooltip("The text that displays the current combo counter.")]
         [SerializeField] private TextMeshProUGUI comboText; 
         
+        [Tooltip("The text that displays remaining enemies.")]
+        [SerializeField] private TextMeshProUGUI remainingEnemiesText;
+        
         [Tooltip("Array of 3 UI Images (pips/dots) to track recovery progress.")]
         [SerializeField] private SkinnedMeshRenderer[] recoveryPips;
 
@@ -44,6 +47,7 @@ namespace ClockworkGearslinger.UI
             if (crosshair != null) originalCrosshairPos = crosshair.anchoredPosition;
             if (jamText != null) jamText.gameObject.SetActive(false);
             if (comboText != null) comboText.gameObject.SetActive(false);
+            if (remainingEnemiesText != null) remainingEnemiesText.text = "";
             ResetPips(pipFilledMaterial);
 
             // 1. Subscribe to the Metronome
@@ -66,6 +70,22 @@ namespace ClockworkGearslinger.UI
             {
                 Debug.LogWarning("[UIManager] PlayerController reference is missing! Please assign it in the Inspector.");
             }
+
+            if (ClockworkGearslinger.Enemies.EnemySpawner.Instance != null)
+            {
+                ClockworkGearslinger.Enemies.EnemySpawner.Instance.OnRemainingEnemiesChanged += UpdateRemainingEnemiesUI;
+            }
+
+            StartCoroutine(DelayedUIInit());
+        }
+
+        private IEnumerator DelayedUIInit()
+        {
+            yield return null; // Wait 1 frame to ensure all Start methods complete
+            if (ClockworkGearslinger.Enemies.EnemySpawner.Instance != null)
+            {
+                UpdateRemainingEnemiesUI(ClockworkGearslinger.Enemies.EnemySpawner.Instance.RemainingEnemies);
+            }
         }
 
         private void OnDestroy()
@@ -84,6 +104,11 @@ namespace ClockworkGearslinger.UI
                 playerController.OnGunFired -= HandleGunFired;
                 playerController.OnComboChanged -= UpdateComboUI;
                 playerController.OnComboLost -= ResetComboUI;
+            }
+
+            if (ClockworkGearslinger.Enemies.EnemySpawner.Instance != null)
+            {
+                ClockworkGearslinger.Enemies.EnemySpawner.Instance.OnRemainingEnemiesChanged -= UpdateRemainingEnemiesUI;
             }
         }
 
@@ -303,6 +328,23 @@ namespace ClockworkGearslinger.UI
             {
                 comboText.gameObject.SetActive(false);
             }
+        }
+
+        private void UpdateRemainingEnemiesUI(int remaining)
+        {
+            if (remainingEnemiesText != null)
+            {
+                remainingEnemiesText.text = $"ENEMIES LEFT: {remaining}";
+                
+                // Add a small pop effect when an enemy is defeated
+                StopCoroutine(nameof(PopTextEffectWrapperForEnemies));
+                StartCoroutine(nameof(PopTextEffectWrapperForEnemies), remainingEnemiesText);
+            }
+        }
+
+        private IEnumerator PopTextEffectWrapperForEnemies(TextMeshProUGUI textElement)
+        {
+            yield return StartCoroutine(PopTextEffect(textElement, 1.2f));
         }
 
         // A reusable pop effect for texts
