@@ -2874,8 +2874,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2397ed4d896d674588e96bd4e3074a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ClockworkGearslinger.Core.RhythmManager
-  bpm: 110
+  bpm: 100
   defaultInputTolerance: 0.15
+  audioOffset: -0.05
 --- !u!4 &2013217881
 Transform:
   m_ObjectHideFlags: 0

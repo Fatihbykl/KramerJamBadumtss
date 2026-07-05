@@ -19,6 +19,9 @@ namespace ClockworkGearslinger.Core
         [Tooltip("The tolerance window (in seconds) for a player input to be considered a 'hit'.")]
         [SerializeField] private float defaultInputTolerance = 0.15f;
 
+        [Tooltip("Offset in seconds to fix tracks that have a tiny bit of silence at the start, or to compensate for hardware audio latency. Tweak this until the visual pulses match the audio hits exactly.")]
+        [SerializeField] private float audioOffset = 0f;
+
         // Event for visuals (UI, environment pulses). 
         // DO NOT use this for gameplay input logic; use IsOnBeat() instead.
         public event Action OnBeat;
@@ -59,8 +62,8 @@ namespace ClockworkGearslinger.Core
             if (AudioSettings.dspTime < AudioManager.Instance.SongStartTime)
                 return;
 
-            // Calculate precise song position mathematically based on DSP time
-            float songPositionInSeconds = (float)(AudioSettings.dspTime - AudioManager.Instance.SongStartTime);
+            // Calculate precise song position mathematically based on DSP time, including the custom offset
+            float songPositionInSeconds = (float)(AudioSettings.dspTime - AudioManager.Instance.SongStartTime) + audioOffset;
             
             // Convert to beats
             SongPositionInBeats = songPositionInSeconds / secPerBeat;
