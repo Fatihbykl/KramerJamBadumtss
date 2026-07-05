@@ -1,3 +1,5 @@
 ﻿<Solution>
+  <Project Path="kTools.Mirrors.Runtime.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="kTools.Mirrors.Editor.csproj" />
 </Solution>
