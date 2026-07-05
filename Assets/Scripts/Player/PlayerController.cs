@@ -18,6 +18,8 @@ namespace ClockworkGearslinger.Player
     /// </summary>
     public class PlayerController : MonoBehaviour
     {
+        [SerializeField] private Animator revolverAnimator;
+        
         [Header("Grid Movement Settings")]
         [Tooltip("How far the player moves per grid step.")]
         [SerializeField] private float moveDistance = 2f;
@@ -51,6 +53,8 @@ namespace ClockworkGearslinger.Player
 
         private void Update()
         {
+            HandleMovement();
+
             // Simple State Machine logic
             if (CurrentState == PlayerState.Normal)
             {
@@ -62,10 +66,7 @@ namespace ClockworkGearslinger.Player
             }
         }
 
-        /// <summary>
-        /// Phase 3: Handles standard gameplay. Move and shoot on the beat.
-        /// </summary>
-        private void HandleNormalState()
+        private void HandleMovement()
         {
             // 1. Grid Movement
             if (!isMoving)
@@ -108,7 +109,13 @@ namespace ClockworkGearslinger.Player
                     }
                 }
             }
+        }
 
+        /// <summary>
+        /// Phase 3: Handles standard gameplay. Shoot on the beat.
+        /// </summary>
+        private void HandleNormalState()
+        {
             // 2. Firing
             if (Input.GetMouseButtonDown(0)) // Left Mouse Button
             {
@@ -139,6 +146,7 @@ namespace ClockworkGearslinger.Player
             
             // Fire event for UI crosshair flash, screen shake
             OnGunFired?.Invoke(); 
+            revolverAnimator.SetTrigger("Shoot");
 
             // Perform Hitscan (Raycast) from the main camera's center
             if (Camera.main != null)
@@ -188,6 +196,7 @@ namespace ClockworkGearslinger.Player
                     {
                         lastRecoveryBeat = currentBeat;
                         ConsecutiveRecoveryHits++;
+                        revolverAnimator.SetTrigger("Reload");
                         Debug.Log($"[PlayerController] Recovery Hit {ConsecutiveRecoveryHits}/3");
                         
                         // Update UI pips
@@ -219,7 +228,7 @@ namespace ClockworkGearslinger.Player
             BulletCount = 1; // Reload the 1 bullet
             CurrentState = PlayerState.Normal;
             ConsecutiveRecoveryHits = 0;
-
+            
             // Phase 4: Re-introduce the heavy guitars as a musical reward
             if (AudioManager.Instance != null)
                 AudioManager.Instance.UnmuteGuitars();

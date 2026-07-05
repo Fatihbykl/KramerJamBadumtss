@@ -69,8 +69,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 792bb3e72bfdab841af394c69cdcc8e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ClockworkGearslinger.Enemies.EnemyController
+  maxHealth: 1
   moveDistance: 2
   moveDuration: 0.1
+  beatsPerMove: 4
 --- !u!1 &8083750785461908327
 GameObject:
   m_ObjectHideFlags: 0
