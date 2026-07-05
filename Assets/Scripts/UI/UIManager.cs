@@ -25,14 +25,13 @@ namespace ClockworkGearslinger.UI
         [SerializeField] private TextMeshProUGUI jamText; 
         
         [Tooltip("Array of 3 UI Images (pips/dots) to track recovery progress.")]
-        [SerializeField] private Image[] recoveryPips;
+        [SerializeField] private SkinnedMeshRenderer[] recoveryPips;
 
         [Header("Polish Settings")]
         [SerializeField] private float crosshairPulseScale = 1.3f;
         [SerializeField] private float pulseDuration = 0.15f;
-        [SerializeField] private Color pipEmptyColor = new Color(0.2f, 0.2f, 0.2f, 1f); // Dark gray
-        [SerializeField] private Color pipFilledColor = Color.yellow;
-        [SerializeField] private Color pipErrorColor = Color.red;
+        [SerializeField] private Material pipFilledMaterial;
+        [SerializeField] private Material pipErrorMaterial;
 
         private Vector2 originalCrosshairPos;
 
@@ -41,7 +40,7 @@ namespace ClockworkGearslinger.UI
             // Initialize UI state
             if (crosshair != null) originalCrosshairPos = crosshair.anchoredPosition;
             if (jamText != null) jamText.gameObject.SetActive(false);
-            ResetPips();
+            ResetPips(pipFilledMaterial);
 
             // 1. Subscribe to the Metronome
             if (RhythmManager.Instance != null)
@@ -119,7 +118,7 @@ namespace ClockworkGearslinger.UI
                 StopCoroutine(nameof(BounceText));
                 StartCoroutine(nameof(BounceText));
             }
-            ResetPips();
+            ResetPips(pipErrorMaterial);
         }
 
         private IEnumerator BounceText()
@@ -154,21 +153,23 @@ namespace ClockworkGearslinger.UI
             {
                 if (recoveryPips[i] == null) continue;
 
+                Material[] mats = recoveryPips[i].sharedMaterials;
                 if (i < currentHits)
                 {
-                    recoveryPips[i].color = pipFilledColor;
+                    mats[1] = pipFilledMaterial;
                 }
                 else
                 {
-                    recoveryPips[i].color = pipEmptyColor;
+                    mats[1] = pipErrorMaterial;
                 }
+                recoveryPips[i].sharedMaterials = mats;
             }
 
             // Hide the jam UI when successfully recovered
             if (currentHits >= 3)
             {
                 if (jamText != null) jamText.gameObject.SetActive(false);
-                ResetPips(); 
+                ResetPips(pipFilledMaterial); 
                 // Note: Good place to flash the screen white as a "success" impact!
             }
         }
@@ -180,18 +181,28 @@ namespace ClockworkGearslinger.UI
         {
             foreach (var pip in recoveryPips)
             {
-                if (pip != null) pip.color = pipErrorColor;
+                if (pip != null)
+                {
+                    Material[] mats = pip.sharedMaterials;
+                    mats[1] = pipErrorMaterial;
+                    pip.sharedMaterials = mats;
+                }
             }
 
             // Return them to empty after a quick delay so the player can try again
             Invoke(nameof(ResetPips), 0.2f);
         }
 
-        private void ResetPips()
+        private void ResetPips(Material targetMaterial)
         {
             foreach (var pip in recoveryPips)
             {
-                if (pip != null) pip.color = pipEmptyColor;
+                if (pip != null)
+                {
+                    Material[] mats = pip.sharedMaterials;
+                    mats[1] = targetMaterial;
+                    pip.sharedMaterials = mats;
+                }
             }
         }
 

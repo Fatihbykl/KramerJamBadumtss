@@ -887,7 +887,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2393,14 +2393,14 @@ MonoBehaviour:
   crosshair: {fileID: 622873694}
   jamText: {fileID: 1471938050}
   recoveryPips:
-  - {fileID: 1584548362}
-  - {fileID: 808409893}
-  - {fileID: 698720337}
+  - {fileID: 588633731377976992}
+  - {fileID: 8582323494258483304}
+  - {fileID: 4322645930171968951}
   crosshairPulseScale: 1.3
   pulseDuration: 0.15
-  pipEmptyColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-  pipFilledColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  pipErrorColor: {r: 1, g: 0, b: 0, a: 1}
+  pipEmptyMaterial: {fileID: 2100000, guid: e857306598785904a92326ad29b26210, type: 2}
+  pipFilledMaterial: {fileID: 2100000, guid: b144c50deee1e17419dc5b812e85a6cc, type: 2}
+  pipErrorMaterial: {fileID: 2100000, guid: a4f34f835e88feb4a8129667c8589815, type: 2}
 --- !u!114 &1491116885
 MonoBehaviour:
   m_ObjectHideFlags: 0
