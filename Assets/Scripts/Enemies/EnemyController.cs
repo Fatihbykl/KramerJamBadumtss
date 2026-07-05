@@ -28,7 +28,10 @@ namespace ClockworkGearslinger.Enemies
         [SerializeField] private float moveDistance = 2f;
         [Tooltip("How fast the lerp is when moving.")]
         [SerializeField] private float moveDuration = 0.1f;
+        [Tooltip("The enemy will move every N beats (1 = every beat, 2 = every other beat).")]
+        [SerializeField] private int beatsPerMove = 1;
 
+        private int beatCounter = 0;
         private bool isMoving = false;
 
         private void Start()
@@ -70,11 +73,16 @@ namespace ClockworkGearslinger.Enemies
 
         private void MoveOnBeat()
         {
-            if (playerTarget != null && !isMoving)
+            beatCounter++;
+            if (beatCounter >= beatsPerMove)
             {
-                navAgent.nextPosition = transform.position; // Sync agent start
-                navAgent.SetDestination(playerTarget.position);
-                StartCoroutine(StepToTarget());
+                beatCounter = 0;
+                if (playerTarget != null && !isMoving)
+                {
+                    navAgent.nextPosition = transform.position; // Sync agent start
+                    navAgent.SetDestination(playerTarget.position);
+                    StartCoroutine(StepToTarget());
+                }
             }
         }
 

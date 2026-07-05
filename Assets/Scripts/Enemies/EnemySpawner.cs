@@ -23,11 +23,27 @@ namespace ClockworkGearslinger.Enemies
         [Tooltip("Radius around this spawner object to randomly spawn enemies.")]
         [SerializeField] private float spawnRadius = 20f;
 
+        [Header("Spawn Restrictions")]
+        [Tooltip("Minimum distance from the player to spawn.")]
+        [SerializeField] private float minimumPlayerDistance = 10f;
+        [Tooltip("Ensure enemies spawn off-screen.")]
+        [SerializeField] private bool requireOffScreenSpawn = true;
+
         private bool bossSpawned = false;
         private int lastSpawnedEnemyBeat = -1;
 
+        private Transform playerTransform;
+        private Camera mainCamera;
+
         private void Start()
         {
+            mainCamera = Camera.main;
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                playerTransform = playerObj.transform;
+            }
+
             if (RhythmManager.Instance != null)
             {
                 RhythmManager.Instance.OnBeat += HandleBeat;
@@ -73,10 +89,28 @@ namespace ClockworkGearslinger.Enemies
         private Vector3 GetRandomPointOnNavMesh()
         {
             // Try multiple times to find a valid spot on the NavMesh
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < 50; i++)
             {
                 Vector2 randomCircle = Random.insideUnitCircle * spawnRadius;
                 Vector3 randomPos = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);
+
+                // Distance check
+                if (playerTransform != null && Vector3.Distance(randomPos, playerTransform.position) < minimumPlayerDistance)
+                {
+                    continue;
+                }
+
+                // Off-screen check
+                if (requireOffScreenSpawn && mainCamera != null)
+                {
+                    Vector3 viewportPoint = mainCamera.WorldToViewportPoint(randomPos);
+                    // Check if the point is strictly inside the screen bounds (with a small margin)
+                    bool isOnScreen = viewportPoint.z > 0 && viewportPoint.x > -0.1f && viewportPoint.x < 1.1f && viewportPoint.y > -0.1f && viewportPoint.y < 1.1f;
+                    if (isOnScreen)
+                    {
+                        continue;
+                    }
+                }
 
                 // Sample position to ensure the target is on the NavMesh
                 if (NavMesh.SamplePosition(randomPos, out NavMeshHit hit, 2f, NavMesh.AllAreas))
@@ -93,6 +127,12 @@ namespace ClockworkGearslinger.Enemies
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, spawnRadius);
+
+            if (minimumPlayerDistance > 0)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawWireSphere(transform.position, minimumPlayerDistance);
+            }
         }
     }
 }
