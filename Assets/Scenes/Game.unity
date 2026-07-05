@@ -2293,7 +2293,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 7985083080254608684, guid: 5dd037e24177bbd4dbf1c8e4b443c816, type: 3}
   bossPrefab: {fileID: 7666524986421170041, guid: b635cde5b58218d4bbde6eaea10fcbf0, type: 3}
   enemySpawnIntervalBeats: 10
-  bossSpawnBeat: 64
+  bossSpawnBeat: 20
   spawnRadius: 20
 --- !u!4 &1540732089
 Transform:

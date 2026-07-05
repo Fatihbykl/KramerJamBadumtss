@@ -15,6 +15,8 @@ namespace ClockworkGearslinger.Enemies
     {
         private NavMeshAgent navAgent;
         private Transform playerTarget;
+
+        private Animator animator;
         
         [Header("Stats Settings")]
         [Tooltip("Maximum health of the enemy. Can be increased for bosses.")]
@@ -33,7 +35,8 @@ namespace ClockworkGearslinger.Enemies
         {
             currentHealth = maxHealth;
             navAgent = GetComponent<NavMeshAgent>();
-            
+            animator = GetComponentInChildren<Animator>();
+
             // Disable agent's automatic movement update to move step by step manually
             navAgent.updatePosition = false;
             navAgent.updateRotation = false;
@@ -78,7 +81,8 @@ namespace ClockworkGearslinger.Enemies
         private IEnumerator StepToTarget()
         {
             isMoving = true;
-            
+            animator.SetTrigger("Lunge");
+
             // Wait one frame to let NavMeshAgent calculate the path
             yield return null;
             
@@ -118,6 +122,7 @@ namespace ClockworkGearslinger.Enemies
                 }
             }
             
+            animator.SetTrigger("Stop");
             isMoving = false;
         }
 
