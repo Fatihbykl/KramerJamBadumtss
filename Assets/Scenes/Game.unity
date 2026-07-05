@@ -1664,6 +1664,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6246021e3058b6c459f034ae5b1037f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ClockworkGearslinger.Player.PlayerController
+  revolverAnimator: {fileID: 919132148684529498}
   moveDistance: 2
   moveDuration: 0.1
   movePenaltyBeats: 3
@@ -1718,35 +1719,47 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 543450653138863587}
+    m_TransformParent: {fileID: 4184815085145196343}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 9a6ff4e3b8c6f0e4f8e710cc9be00443, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.009999999
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9a6ff4e3b8c6f0e4f8e710cc9be00443, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.010000002
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9a6ff4e3b8c6f0e4f8e710cc9be00443, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.009999999
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9a6ff4e3b8c6f0e4f8e710cc9be00443, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.00093877316
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9a6ff4e3b8c6f0e4f8e710cc9be00443, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.15479994
+      value: 0.0017675243
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9a6ff4e3b8c6f0e4f8e710cc9be00443, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.091943294
+      value: -0.00034280645
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9a6ff4e3b8c6f0e4f8e710cc9be00443, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.96445537
+      value: 0.9501921
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9a6ff4e3b8c6f0e4f8e710cc9be00443, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0.16525471
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9a6ff4e3b8c6f0e4f8e710cc9be00443, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.26424593
+      value: 0.26033813
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9a6ff4e3b8c6f0e4f8e710cc9be00443, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0.045277245
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9a6ff4e3b8c6f0e4f8e710cc9be00443, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2885,7 +2898,6 @@ Transform:
   - {fileID: 216822764233304491}
   - {fileID: 5043109358556011194}
   - {fileID: 3027986950419709415}
-  - {fileID: 1059434397}
   m_Father: {fileID: 773619351}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &919132148684529497
@@ -2897,6 +2909,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 543450653138863587}
+  - component: {fileID: 919132148684529498}
   m_Layer: 7
   m_Name: Revolver
   m_TagString: Untagged
@@ -2904,6 +2917,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!95 &919132148684529498
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148684529497}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 29d153cd960bdc046a279a9977bd5cac, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!137 &1818887365207724222
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -3124,6 +3159,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 412512074065030306}
+  - {fileID: 1059434397}
   m_Father: {fileID: 3027986950419709415}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &5043109358556011194
